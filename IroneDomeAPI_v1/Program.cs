@@ -1,3 +1,4 @@
+using IroneDomeAPI_v1.Middlewares.Attack;
 using IroneDomeAPI_v1.Middlewares.Global;
 using IroneDomeAPI_v1.Models;
 using IroneDomeAPI_v1.Services;
@@ -15,6 +16,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<AttackLoggingMiddleware>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -27,6 +30,9 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 app.UseMiddleware<GlobalLoggingMiddleware>();
+
+
+
 
 app.MapControllers();
 

@@ -3,9 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using IroneDomeAPI_v1.Models;
 using IroneDomeAPI_v1.Services;
 using IroneDomeAPI_v1.utils;
+using IroneDomeAPI_v1.Middlewares;
+using IroneDomeAPI_v1.Middlewares.Attack;
 
 namespace IroneDomeAPI_v1.Controllers;
 
+// [ServiceFilter(typeof(AttackLoggingMiddleware))]
 [Route("api/[controller]")]
 [ApiController]
 public class AttacksController : ControllerBase
