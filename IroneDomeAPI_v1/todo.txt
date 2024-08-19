@@ -1,0 +1,6 @@
+1. dependency injection
+2. instead of firstOrDefault - create functions to handle repeated logic
+3. make task run really take time with async and await and than change status
+4. add validation for input (middleware)
+5. improve error messages
+6. add documentation for each route

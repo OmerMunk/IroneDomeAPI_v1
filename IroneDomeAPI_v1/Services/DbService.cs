@@ -2,7 +2,13 @@ using IroneDomeAPI_v1.Models;
 
 namespace IroneDomeAPI_v1.Services;
 
-public class DbService
+
+public interface IDbService<T>
 {
-   public static List<Attack> AttacksList = new List<Attack>();
+   public List<T> Attacks { get; set; }
+}
+
+public class DbService: IDbService<Attack>
+{
+   public List<Attack> Attacks { get; set; } = new List<Attack>();
 }
