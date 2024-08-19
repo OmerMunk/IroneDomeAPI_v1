@@ -1,4 +1,6 @@
 
+using Microsoft.AspNetCore.Mvc;
+
 namespace IroneDomeAPI_v1.Middlewares.Attack;
 
 public class AttackLoggingMiddleware
@@ -18,3 +20,5 @@ public class AttackLoggingMiddleware
         await this._next(context);
     }
 }
+
+

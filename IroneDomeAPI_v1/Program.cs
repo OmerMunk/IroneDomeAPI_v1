@@ -16,7 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<AttackLoggingMiddleware>();
+
 
 var app = builder.Build();
 
@@ -30,6 +30,14 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 app.UseMiddleware<GlobalLoggingMiddleware>();
+
+app.UseWhen(
+    context =>
+        context.Request.Path.StartsWithSegments("/api/attacks"),
+    appBuilder =>
+{
+    appBuilder.UseMiddleware<AttackLoggingMiddleware>();
+});
 
 
 
