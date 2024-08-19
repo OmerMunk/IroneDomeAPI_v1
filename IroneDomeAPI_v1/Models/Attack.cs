@@ -11,6 +11,9 @@ public class Attack
     [AllowedValues("Iran", "Hutim")]
     public string Origin { get; set; }
     
+    [Range(50, 500)]
+    public int? Damage { get; set; }
+    
     public string Type { get; set; }
     public AttackStatuses? Status { get; set; }
     public DateTime? StartedAt { get; set; }
