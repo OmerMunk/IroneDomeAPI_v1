@@ -20,7 +20,7 @@ public class UserController : ControllerBase
         // token handler can create token
         var tokenHandler = new JwtSecurityTokenHandler();
         
-        string secretKey = "12345678"; //TODO: remove this from code
+        string secretKey = "1234dyi5fjthgjdndfadsfgdsjfgj464twiyyd5ntyhgkdrue74hsf5ytsusefh55678"; //TODO: remove this from code
         byte[] key = Encoding.ASCII.GetBytes(secretKey);
 
         // token descriptor describe HOW to create the token
@@ -34,7 +34,7 @@ public class UserController : ControllerBase
                 }
             ),
             // expiration time of the token
-            Expires = DateTime.UtcNow.AddMinutes(1),
+            Expires = DateTime.UtcNow.AddSeconds(30),
             // the secret key of the token
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key),
