@@ -34,7 +34,7 @@ public class UserController : ControllerBase
                 }
             ),
             // expiration time of the token
-            Expires = DateTime.Now.AddMinutes(1),
+            Expires = DateTime.UtcNow.AddMinutes(1),
             // the secret key of the token
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key),
@@ -46,10 +46,7 @@ public class UserController : ControllerBase
         var token = tokenHandler.CreateToken(tokenDescriptor);
         // converting the token to string
         var tokenString = tokenHandler.WriteToken(token);
-
         return tokenString;
-        
-        return "";
     }
     
     [HttpPost("login")]
