@@ -31,11 +31,13 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 app.UseMiddleware<GlobalLoggingMiddleware>();
 
+
 app.UseWhen(
     context =>
         context.Request.Path.StartsWithSegments("/api/attacks"),
     appBuilder =>
 {
+    appBuilder.UseMiddleware<JwtValidationMiddleware>();
     appBuilder.UseMiddleware<AttackLoggingMiddleware>();
 });
 
