@@ -17,26 +17,34 @@ public class UserController : ControllerBase
 {
     private string GenerateToken(string userIP)
     {
+        // token handler can create token
         var tokenHandler = new JwtSecurityTokenHandler();
+        
         string secretKey = "12345678"; //TODO: remove this from code
         byte[] key = Encoding.ASCII.GetBytes(secretKey);
 
+        // token descriptor describe HOW to create the token
         var tokenDescriptor = new SecurityTokenDescriptor
         {
+            // things to include in the token
             Subject = new ClaimsIdentity(
                 new Claim[]
                 {
                     new Claim(ClaimTypes.Name, userIP),
                 }
             ),
+            // expiration time of the token
             Expires = DateTime.Now.AddMinutes(1),
+            // the secret key of the token
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256Signature
                 )
         };
         
+        // creating the token
         var token = tokenHandler.CreateToken(tokenDescriptor);
+        // converting the token to string
         var tokenString = tokenHandler.WriteToken(token);
 
         return tokenString;
