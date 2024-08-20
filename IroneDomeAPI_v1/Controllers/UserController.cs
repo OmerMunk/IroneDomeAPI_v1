@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
-
-
 using System.IdentityModel.Tokens.Jwt;
+
+
+using System.Text;
 
 
 namespace IroneDomeAPI_v1.Controllers;
@@ -14,9 +15,28 @@ namespace IroneDomeAPI_v1.Controllers;
 [ApiController]
 public class UserController : ControllerBase
 {
-    private string GenerateToken()
+    private string GenerateToken(string userIP)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
+        string secretKey = "12345678"; //TODO: remove this from code
+        byte[] key = Encoding.ASCII.GetBytes(secretKey);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(
+                new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, userIP),
+                }
+            ),
+            Expires = DateTime.UtcNow.AddMinutes(1),
+        };
+        
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var tokenString = tokenHandler.WriteToken(token);
+        
+        return tokenString
+        
         return "";
     }
     
