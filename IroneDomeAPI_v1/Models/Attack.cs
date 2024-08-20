@@ -6,15 +6,15 @@ namespace IroneDomeAPI_v1.Models;
 
 public class Attack
 {
-    public Guid? Id { get; set; }
+    public Guid? id { get; set; }
     
     [AllowedValues("Iran", "Hutim")]
-    public string Origin { get; set; }
+    public string origin { get; set; }
     
     [Range(50, 500)]
-    public int? Damage { get; set; }
+    public int? damage { get; set; }
     
-    public string Type { get; set; }
-    public AttackStatuses? Status { get; set; }
-    public DateTime? StartedAt { get; set; }
+    public string type { get; set; }
+    public AttackStatuses? status { get; set; }
+    public DateTime? startedat { get; set; }
 }

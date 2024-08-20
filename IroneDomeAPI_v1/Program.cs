@@ -2,9 +2,13 @@ using IroneDomeAPI_v1.Middlewares.Attack;
 using IroneDomeAPI_v1.Middlewares.Global;
 using IroneDomeAPI_v1.Models;
 using IroneDomeAPI_v1.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<IronDomeContext>(options =>
+    options.UseNpgsql("Host=localhost;Port=5432;Database=irondome;Username=omermunk;Password=123456"));
 
 
 // Add logging services
@@ -37,7 +41,7 @@ app.UseWhen(
         context.Request.Path.StartsWithSegments("/api/attacks"),
     appBuilder =>
 {
-    appBuilder.UseMiddleware<JwtValidationMiddleware>();
+    // appBuilder.UseMiddleware<JwtValidationMiddleware>();
     appBuilder.UseMiddleware<AttackLoggingMiddleware>();
 });
 

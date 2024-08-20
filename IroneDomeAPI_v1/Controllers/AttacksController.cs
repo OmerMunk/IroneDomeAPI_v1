@@ -5,6 +5,7 @@ using IroneDomeAPI_v1.Services;
 using IroneDomeAPI_v1.utils;
 using IroneDomeAPI_v1.Middlewares;
 using IroneDomeAPI_v1.Middlewares.Attack;
+using Microsoft.EntityFrameworkCore;
 
 namespace IroneDomeAPI_v1.Controllers;
 
@@ -13,22 +14,24 @@ namespace IroneDomeAPI_v1.Controllers;
 public class AttacksController : ControllerBase
 {
     
-    private readonly IDbService<Attack> _dbService;
+    private readonly IronDomeContext _context;
     private readonly ILogger<AttacksController> _logger;
     
-    public AttacksController(IDbService<Attack> dbService, ILogger<AttacksController> logger)
+    public AttacksController(ILogger<AttacksController> logger, IronDomeContext context)
     {
-        this._dbService = dbService;
+        
+        this._context = context;
         this._logger = logger;
     }
 
     [HttpGet]
-    public IActionResult GetAttacks()
+    public async Task<IActionResult> GetAttacks()
     {
         int status = StatusCodes.Status200OK;
+        var attacks = await this._context.attacks.ToListAsync();
         return StatusCode(
             status,
-            HttpUtils.Response(status, new {attacks = this._dbService.Attacks.ToArray()})
+            HttpUtils.Response(status, new {attacks = attacks})
             );
     }
 
@@ -36,11 +39,12 @@ public class AttacksController : ControllerBase
     [HttpPost]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public IActionResult CreateAttack(Attack attack)
+    public async Task<IActionResult> CreateAttack(Attack attack)
     {
-        attack.Id = Guid.NewGuid();
-        attack.Status = AttackStatuses.PENDING;
-        this._dbService.Attacks.Add(attack);
+        attack.status = AttackStatuses.PENDING;
+        // this._context.attacks.Add(attack);
+        this._context.attacks.Add(attack);
+        await this._context.SaveChangesAsync();
         return StatusCode(
             StatusCodes.Status201Created,
             new {success = true, attack = attack}
@@ -48,12 +52,12 @@ public class AttacksController : ControllerBase
     }
 
     [HttpPost("{id}/start")]
-    public IActionResult StartAttack(Guid id)
+    public async Task<IActionResult> StartAttack(Guid id)
     {
-        Attack attack = this._dbService.Attacks.FirstOrDefault(att => att.Id == id);
+        Attack attack = await this._context.attacks.FindAsync(id);
         int status = StatusCodes.Status404NotFound;
         if (attack == null) return StatusCode(status, HttpUtils.Response(status, "Attack not found"));
-        if (attack.Status == AttackStatuses.COMPLETED)
+        if (attack.status == AttackStatuses.COMPLETED)
         {
             status = StatusCodes.Status400BadRequest;
             return StatusCode(
@@ -64,8 +68,8 @@ public class AttacksController : ControllerBase
                 }
             );
         }
-        attack.StartedAt = DateTime.Now;
-        attack.Status = AttackStatuses.IN_PROGRESS;
+        attack.startedat = DateTime.Now;
+        attack.status = AttackStatuses.IN_PROGRESS;
         Task attackTask = Task.Run(() =>
         {
             Task.Delay(10000);
@@ -82,7 +86,7 @@ public class AttacksController : ControllerBase
     public IActionResult AttackStatus(Guid id)
     {
         int status;
-        Attack attack = this._dbService.Attacks.FirstOrDefault(att => att.Id == id);
+        Attack attack = this._context.attacks.FirstOrDefault(att => att.id == id);
 
         if (attack == null)
         {
