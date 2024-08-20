@@ -58,10 +58,11 @@ public class UserController : ControllerBase
         if (loginObject.UserName == "admin" &&
             loginObject.Password == "123456")
         {
-            
+
+            string userIP = HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             
             return StatusCode(200
-                ,new {token = GenerateToken()}
+                ,new {token = GenerateToken(userIP)}
                 );
         }
         return StatusCode(StatusCodes.Status401Unauthorized,
