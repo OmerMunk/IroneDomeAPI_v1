@@ -29,13 +29,17 @@ public class UserController : ControllerBase
                     new Claim(ClaimTypes.Name, userIP),
                 }
             ),
-            Expires = DateTime.UtcNow.AddMinutes(1),
+            Expires = DateTime.Now.AddMinutes(1),
+            SigningCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(key),
+                SecurityAlgorithms.HmacSha256Signature
+                )
         };
         
         var token = tokenHandler.CreateToken(tokenDescriptor);
         var tokenString = tokenHandler.WriteToken(token);
-        
-        return tokenString
+
+        return tokenString;
         
         return "";
     }
