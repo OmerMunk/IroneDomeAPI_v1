@@ -56,6 +56,7 @@ public class UserController : ControllerBase
             loginObject.Password == "123456")
         {
 
+            // getting the user (requester) IP
             string userIP = HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             
             return StatusCode(200
